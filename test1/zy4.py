@@ -14,10 +14,9 @@ print(isOs(3))
 #判断是否为偶数
 print((lambda x: x % 2 == 0)(3))
 
-
 #使用匿名函数对字典中的列表进行排序
 #源数据：[{'name': '张三', 'age': 18}, {'name': '李四', 'age': 20}, {'name': '王五', 'age': 17}]
-#排序规则：按照年龄降序排序
+#排序规则：按照年龄升序排序
 li = [{'name': '张三', 'age': 18}, {'name': '李四', 'age': 20}, {'name': '王五', 'age': 17}]
 li.sort(key=lambda x: x['age'], reverse=False)
 print(li)
