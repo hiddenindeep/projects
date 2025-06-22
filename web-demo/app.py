@@ -3,8 +3,9 @@ from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key-here'
-# 生产环境使用MySQL
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://web_user:web_password@192.168.1.2:3306/stellar'
+#host = '192.168.1.2'
+host = '192.168.3.5'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://web_user:web_password@'+host+':3306/stellar'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -83,4 +84,7 @@ def update_user(id):
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
-    app.run(host='0.0.0.0', port=5000, debug=True) 
+    #windows
+    #app.run(host='0.0.0.0', port=5000, debug=False)
+    #mac
+    app.run(host='0.0.0.0', port=8000, debug=False) 
