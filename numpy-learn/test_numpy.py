@@ -76,3 +76,43 @@ print(arr5[1:2,1:3])
 
 #ndarray[dim1_index,dim2_index,...dimn_index]
 #dim_index:整数、切片、整数数组、布尔数组
+
+#级联
+#级联维度长度必须一致
+arr6 = np.random.randint(1,20,size=(3,4))
+print(arr6)
+arr7 = np.random.randint(3,10,size=(3,2))
+print(arr7)
+
+#axis=0:列方向级联 同vstack
+#arr8 = np.concatenate((arr6,arr7),axis=0)
+#ValueError: all the input array dimensions except for the concatenation axis must match exactly, 
+# but along dimension 1, the array at index 0 has size 4 and the array at index 1 has size 2
+#联接方向上的维度长度必须一致
+
+#axis=1:行方向级联 同hstack
+arr9 = np.concatenate((arr6,arr7),axis=1)
+print(arr9)
+arr10 = np.hstack((arr6,arr7))
+print(arr10)
+
+#切分
+arr11 = np.random.randint(1,20,size=(6,4))
+print(arr11)
+#按列方向切分成2等份,在切分的方向上长度要被2整除！
+arr12,arr13 = np.vsplit(arr11,2)
+print(arr12)
+print(arr13)
+
+# arr14,arr15 = np.hsplit(arr11,2)
+
+arr = np.random.randint(1,20,size=(5,2))
+print(arr)
+#indices_or_sections:整数、整数数组、整数列表 [m,n]表示按照0:m,m:n,n:的切片逻辑对数组进行拆分,前闭后开
+arr14,arr15 = np.split(arr,[2],axis=0)
+print(arr14)
+print(arr15)
+arr16,arr17,arr18 = np.split(arr,[2,3],axis=0)
+print(arr16)
+print(arr17)
+print(arr18)
