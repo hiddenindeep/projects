@@ -23,6 +23,5 @@ f = np.delete(a,2,axis=0)
 # print(f)
 
 #数组变形
-#
 g = np.reshape(a,(5,3))
 print(g)

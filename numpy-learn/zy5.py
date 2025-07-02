@@ -21,3 +21,7 @@ b = np.random.randn(300,3)
 a = np.ones(shape=(3, 3))
 b = np.ones(shape=(3, 3))
 print(np.all(a == b))
+
+#遍历数组
+for i in a.flat:
+    print(i)
