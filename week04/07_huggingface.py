@@ -5,8 +5,8 @@ from transformers import AutoTokenizer, AutoModelForMaskedLM
 # 下载命令 modelscope download --model google-bert/bert-base-chinese --local_dir ../models/google-bert/bert-base-chinese
 # https://www.modelscope.cn/models/google-bert/bert-base-chinese/
 
-tokenizer = AutoTokenizer.from_pretrained("../models/google-bert/bert-base-chinese")
-model = AutoModelForMaskedLM.from_pretrained("../models/google-bert/bert-base-chinese")
+tokenizer = AutoTokenizer.from_pretrained("./models/google-bert/bert-base-chinese")
+model = AutoModelForMaskedLM.from_pretrained("./models/google-bert/bert-base-chinese")
 
 # 待处理的文本
 text = "人工智能正在[MASK]改变我们的生活。"
