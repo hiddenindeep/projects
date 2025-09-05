@@ -5,6 +5,7 @@ from transformers import AutoTokenizer, AutoModelForMaskedLM
 # 下载命令 modelscope download --model google-bert/bert-base-chinese --local_dir ../models/google-bert/bert-base-chinese
 # https://www.modelscope.cn/models/google-bert/bert-base-chinese/
 
+#分词器，模型结构，权重
 tokenizer = AutoTokenizer.from_pretrained("./models/google-bert/bert-base-chinese")
 model = AutoModelForMaskedLM.from_pretrained("./models/google-bert/bert-base-chinese")
 
@@ -16,6 +17,12 @@ encoded_input = tokenizer(text, return_tensors='pt')
 print("编码后的输入张量：")
 print(encoded_input)
 print("-----------------------")
+'''
+{'input_ids': tensor([[ 101,  782, 2339, 3255, 5543, 3633, 1762,  103, 3121, 1359, 2769,  812, 4638, 4495, 3833,  511,  102]]), 字在词典的位置
+  'token_type_ids': tensor([[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]),  句子类型，0表示第一句，1表示第二句
+  'attention_mask': tensor([[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]]) 注意力掩码，1表示需要关注，0表示不需要关注
+}
+'''
 
 # 打印分词结果
 tokens = tokenizer.convert_ids_to_tokens(encoded_input['input_ids'][0])

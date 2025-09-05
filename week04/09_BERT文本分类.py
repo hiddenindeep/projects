@@ -9,7 +9,7 @@ from sklearn.preprocessing import LabelEncoder
 
 # -------------------------- 1. 数据准备 --------------------------
 # 加载数据集，指定分隔符为制表符，并无表头
-dataset = pd.read_csv("../Week01/dataset.csv", sep="\t", header=None)
+dataset = pd.read_csv("./week01/dataset.csv", sep="\t", header=None)
 print(dataset)
 
 # 初始化并拟合标签编码器，将文本标签（如“体育”）转换为数字标签（如0, 1, 2...）
@@ -27,7 +27,7 @@ x_train, x_test, train_label, test_label = train_test_split(
 
 # 加载BERT预训练的分词器（Tokenizer）
 # 分词器负责将文本转换为模型可识别的输入ID、注意力掩码等
-tokenizer = BertTokenizer.from_pretrained('../models/google-bert/bert-base-chinese')
+tokenizer = BertTokenizer.from_pretrained('./models/google-bert/bert-base-chinese')
 
 # 对训练集和测试集的文本进行编码
 # truncation=True：如果句子长度超过max_length，则截断
@@ -71,7 +71,7 @@ test_dataloader = DataLoader(test_dataset, batch_size=16, shuffle=True)
 # -------------------------- 3. 模型和优化器 --------------------------
 # 加载BERT用于序列分类的预训练模型
 # num_labels=17：指定分类任务的类别数量
-model = BertForSequenceClassification.from_pretrained('../models/google-bert/bert-base-chinese', num_labels=17)
+model = BertForSequenceClassification.from_pretrained('./models/google-bert/bert-base-chinese', num_labels=17)
 
 # 设置设备，优先使用CUDA（GPU），否则使用CPU
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -112,7 +112,7 @@ def train():
         labels = batch['labels'].to(device)
 
         # 执行前向传播，得到损失和logits
-        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)
+        outputs = model(input_ids, attention_mask=attention_mask, labels=labels)#自动计算损失
         loss = outputs[0]
         total_train_loss += loss.item()
 

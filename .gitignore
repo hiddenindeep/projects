@@ -1,3 +1,4 @@
 # 忽略 models 目录下所有文件
 models/
 01-intent-classify/
+02-sentiment-classify/assets/weights/best_model.pt

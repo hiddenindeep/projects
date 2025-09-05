@@ -1,0 +1,8 @@
+2025-09-04 00:11:47,295 - uvicorn.error - INFO - Started server process [68573]
+2025-09-04 00:11:47,296 - uvicorn.error - INFO - Waiting for application startup.
+2025-09-04 00:11:47,296 - uvicorn.error - INFO - Application startup complete.
+2025-09-04 00:11:47,300 - uvicorn.error - INFO - Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-09-04 00:18:55,002 - uvicorn.error - INFO - Started server process [69146]
+2025-09-04 00:18:55,003 - uvicorn.error - INFO - Waiting for application startup.
+2025-09-04 00:18:55,004 - uvicorn.error - INFO - Application startup complete.
+2025-09-04 00:18:55,005 - uvicorn.error - INFO - Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
