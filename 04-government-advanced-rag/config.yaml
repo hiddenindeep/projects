@@ -1,0 +1,60 @@
+elasticsearch:
+  host: "localhost"
+  port: 9200
+  scheme: "http"
+  username: ""
+  password: ""
+
+database:
+  engine: "sqlite"
+  path: "rag.db"
+  host: "192.168.3.5"
+  port: 3306
+  database: "stellar"
+  username: "root"
+  password: "4r5t6y7u%40"
+
+models:
+  embedding_model:
+    bge-small-zh-v1.5:
+      hf_url: "https://huggingface.co/BAAI/bge-small-zh-v1.5"
+      local_url: "/Users/dd/Documents/nlp/projects/models/BAAI/bge-small-zh-v1.5/"
+      dims: 512
+    
+  rerank_model:
+    bge-reranker-base:
+      hf_url: "https://huggingface.co/BAAI/bge-reranker-base"
+      local_url: "/Users/dd/Documents/nlp/projects/models/BAAI/bge-reranker-base/"
+    
+  llm:
+    config:
+      temperature: 0.1
+      top_p: 1
+      max_tokens_to_sample: 1024
+    base_model:
+      glm:
+        tokens: ""
+      qwen:
+        tokens: ""
+      gpt:
+        tokens: ""
+
+
+
+device: "cuda"
+
+
+
+rag:
+  llm_base: "https://open.bigmodel.cn/api/paas/v4/"
+  llm_api_key: "43aa6570992d01fab078e157e07b4f52.ocKHwNGxhIBrDZD4"
+  llm_model: "glm-4-air"
+  embedding_model: "bge-small-zh-v1.5"
+  rerank_model: "bge-reranker-base"
+  chunk_size: 256
+  chunk_overlap: 20
+  chunk_candidate: 10
+  use_embedding: true
+  use_rerank: false
+  use_rrf: true
+  port: 6006

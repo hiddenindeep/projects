@@ -3,6 +3,7 @@ import torch.nn.functional as F
 
 # 一个形状为 (batch_size, seq_len, feature_dim) 的张量 x
 x = torch.randn(2, 3, 4)  # (batch_size, seq_len, feature_dim)
+print(x)
 
 # 定义头数和每个头的维度
 num_heads = 2
@@ -21,6 +22,9 @@ Q = linear_q(x)  # (batch_size, seq_len, feature_dim)
 K = linear_k(x)  # (batch_size, seq_len, feature_dim)
 V = linear_v(x)  # (batch_size, seq_len, feature_dim)
 
+print("Q :", Q)
+print("K :", K)
+print("V :", V)
 
 # 将 Q, K, V 分割成 num_heads 个头
 def split_heads(tensor, num_heads):
@@ -35,20 +39,29 @@ Q = split_heads(Q, num_heads)  # (batch_size, num_heads, seq_len, head_dim)
 K = split_heads(K, num_heads)  # (batch_size, num_heads, seq_len, head_dim)
 V = split_heads(V, num_heads)  # (batch_size, num_heads, seq_len, head_dim)
 
+print("Q 分割后 :", Q)
+print("K 分割后 :", K)
+print("V 分割后 :", V)
+
 # 计算 Q 和 K 的点积，作为相似度分数 , 也就是自注意力原始权重
 raw_weights = torch.matmul(Q, K.transpose(-2, -1))  # (batch_size, num_heads, seq_len, seq_len)
+print("K.transpose(-2, -1):",K.transpose(-2, -1))
+print("自注意力原始权重 :", raw_weights)
 
 # 对自注意力原始权重进行缩放
 scale_factor = K.size(-1) ** 0.5
+print("缩放因子 :", scale_factor)
 
 scaled_weights = raw_weights / scale_factor  # (batch_size, num_heads, seq_len, seq_len)
+print("缩放后的权重 :", scaled_weights)
 
 # 对缩放后的权重进行 softmax 归一化，得到注意力权重
 attn_weights = F.softmax(scaled_weights, dim=-1)  # (batch_size, num_heads, seq_len, seq_len)
+print("注意力权重 :", attn_weights)
 
 # 将注意力权重应用于 V 向量，计算加权和，得到加权信息
 attn_outputs = torch.matmul(attn_weights, V)  # (batch_size, num_heads, seq_len, head_dim)
-
+print(" 加权信息 :", attn_outputs)
 
 def combine_heads(tensor, num_heads):
     batch_size, num_heads, seq_len, head_dim = tensor.size()
@@ -58,6 +71,7 @@ def combine_heads(tensor, num_heads):
 
 
 attn_outputs = combine_heads(attn_outputs, num_heads)  # (batch_size, seq_len, feature_dim)
+print(" 加权信息 :", attn_outputs)
 
 # 对拼接后的结果进行线性变换
 linear_out = torch.nn.Linear(4, 4)
