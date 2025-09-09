@@ -2,3 +2,4 @@
 models/
 01-intent-classify/
 02-sentiment-classify/assets/weights/best_model.pt
+word2vec_model.bin
