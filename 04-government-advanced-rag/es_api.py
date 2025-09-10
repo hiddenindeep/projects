@@ -37,27 +37,53 @@ def init_es():
         print("Could not connect to Elasticsearch.")
         return False
 
+    # document_meta_mapping = {
+    #     "mappings":{
+    #         'properties': {
+    #             'file_name': {
+    #                 'type': 'text',
+    #                 'analyzer': 'ik_max_word',
+    #                 'search_analyzer': 'ik_max_word'
+    #             },
+    #             'abstract': {
+    #                 'type': 'text',
+    #                 'analyzer': 'ik_max_word',
+    #                 'search_analyzer': 'ik_max_word'
+    #             },
+    #             'full_content': {
+    #                 'type': 'text',
+    #                 'analyzer': 'ik_max_word',
+    #                 'search_analyzer': 'ik_max_word'
+    #             }
+    #         }
+    #     }
+    # }
+
     document_meta_mapping = {
-        "mappings":{
-            'properties': {
-                'file_name': {
-                    'type': 'text',
-                    'analyzer': 'ik_max_word',
-                    'search_analyzer': 'ik_max_word'
+        "mappings": {
+            "properties": {
+                "document_name": {
+                    "type": "text",
+                    "analyzer": "ik_max_word",
+                    "search_analyzer": "ik_max_word"
                 },
-                'abstract': {
-                    'type': 'text',
-                    'analyzer': 'ik_max_word',
-                    'search_analyzer': 'ik_max_word'
+                "abstract": {
+                    "type": "text",
+                    "analyzer": "ik_max_word",
+                    "search_analyzer": "ik_max_word"
                 },
-                'full_content': {
-                    'type': 'text',
-                    'analyzer': 'ik_max_word',
-                    'search_analyzer': 'ik_max_word'
-                }
+                "full_content": {
+                    "type": "text",
+                    "analyzer": "ik_max_word",
+                    "search_analyzer": "ik_max_word"
+                },
+                "file_path": {"type": "keyword"},
+                "document_id": {"type": "keyword"},
+                "knowledge_id": {"type": "keyword"}
             }
         }
     }
+
     try:
         # es.indices.delete(index='document_meta')
         if not es.indices.exists(index="document_meta"):
@@ -67,26 +93,63 @@ def init_es():
         print("Could not create index of document_meta.")
         return False
 
+    # chunk_info_mapping = {
+    #     'mappings': {  # Add 'mappings' here
+    #         'properties': {
+    #             'chunk_content': {
+    #                 'type': 'text',
+    #                 'analyzer': 'ik_max_word',
+    #                 'search_analyzer': 'ik_max_word'
+    #             },
+    #             "embedding_vector": {
+    #                 "type": "dense_vector",
+    #                 "element_type": "float",
+    #                 "dims": embedding_dims,
+    #                 "index": True,
+    #                 "index_options": {
+    #                     "type": "int8_hnsw"
+    #                 }
+    #             }
+    #         }
+    #     }
+    # }
+
     chunk_info_mapping = {
-        'mappings': {  # Add 'mappings' here
-            'properties': {
-                'chunk_content': {
-                    'type': 'text',
-                    'analyzer': 'ik_max_word',
-                    'search_analyzer': 'ik_max_word'
+        "mappings": {
+            "properties": {
+                "document_id": {
+                    "type": "keyword"   # 文档ID，不需要分词
+                },
+                "knowledge_id": {
+                    "type": "keyword"   # 知识库ID，不需要分词
+                },
+                "page_number": {
+                    "type": "integer"   # 页码
+                },
+                "chunk_id": {
+                    "type": "integer"   # 每页的分块编号
+                },
+                "chunk_content": {
+                    "type": "text",     # 分块内容，支持中文分词
+                    "analyzer": "ik_max_word",
+                    "search_analyzer": "ik_max_word"
+                },
+                "chunk_images": {
+                    "type": "keyword"   # 存文件路径/URL，数组也可以存
+                },
+                "chunk_tables": {
+                    "type": "keyword"   # 存表格的标识或路径
                 },
                 "embedding_vector": {
                     "type": "dense_vector",
-                    "element_type": "float",
                     "dims": embedding_dims,
                     "index": True,
-                    "index_options": {
-                        "type": "int8_hnsw"
-                    }
+                    "similarity": "cosine"
                 }
             }
         }
     }
+
 
     try:
         # es.indices.delete(index='chunk_info')

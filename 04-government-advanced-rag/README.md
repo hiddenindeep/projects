@@ -52,6 +52,66 @@
 | `chunk_tables`   | `text`       | chunk 相关表格的路径     |
 | `embedding_vector` | `array<float>` | chunk 的语义编码结果   |
 
+# Create an index
+PUT document_meta
+{
+  "mappings": {
+    "properties": {
+      "document_id": { "type": "integer" },
+      "document_name": { "type": "text" },
+      "knowledge_id": { "type": "keyword" },
+      "file_path": { "type": "text" },
+      "abstract": { "type": "text" }
+    }
+  }
+}
+
+PUT chunk_info
+{
+  "mappings": {
+    "properties": {
+      "chunk_id": { "type": "keyword" },
+      "document_id": { "type": "integer" },
+      "knowledge_id": { "type": "keyword" },
+      "page_number": { "type": "integer" },
+      "chunk_content": { "type": "text" },
+      "chunk_images": { "type": "text" },
+      "chunk_tables": { "type": "text" },
+      "embedding_vector": {
+        "type": "dense_vector", 
+        "dims": 512          //bge-small-zh-v1.5的向量维度
+      }
+    }
+  }
+}
+
+# Add a document to my-index
+POST document_meta/_doc
+{
+  "document_id": 1,
+  "document_name": "机器学习基础.pdf",
+  "knowledge_id": "ml001",
+  "file_path": "/docs/ml/机器学习基础.pdf",
+  "abstract": "这是一份关于机器学习基础知识的文档。"
+}
+
+POST chunk_info/_doc
+{
+  "chunk_id": "c001",
+  "document_id": 1,
+  "knowledge_id": "ml001",
+  "page_number": 1,
+  "chunk_content": "机器学习是一门研究如何让计算机从数据中学习的学科。",
+  "chunk_images": "/images/ml001_page1.png",
+  "chunk_tables": "/tables/ml001_page1.csv",
+  "embedding_vector": []  // 这里是模型生成的向量
+}
+
+# Perform a search in my-index
+GET /chunk_info/_search?q="机器学习"
+
+
+
 ### 知识节点与图片存储（neo4j）
 
 TODO
