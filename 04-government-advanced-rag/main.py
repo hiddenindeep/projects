@@ -373,4 +373,4 @@ def chat(req: RAGRequest) -> RAGResponse:
     )
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=config["rag"]["port"], workers=1)
+    uvicorn.run(app, host="0.0.0.0", port=config["rag"]["port"], workers=1, reload=True)

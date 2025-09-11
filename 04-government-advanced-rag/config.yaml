@@ -47,7 +47,7 @@ device: "cuda"
 
 rag:
   llm_base: "https://open.bigmodel.cn/api/paas/v4/"
-  llm_api_key: "43aa6570992d01fab078e157e07b4f52.ocKHwNGxhIBrDZD4"
+  llm_api_key: "e1a7fb4c97884dc8920adb3e287e3a46.302LXMn0WNBKZTnP"
   llm_model: "glm-4-air"
   embedding_model: "bge-small-zh-v1.5"
   rerank_model: "bge-reranker-base"
