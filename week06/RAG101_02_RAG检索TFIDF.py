@@ -6,7 +6,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.preprocessing import normalize
 
 # 读取数据集
-questions = json.load(open("./week06/questions.json"))
+questions = json.load(open("./week06/questions.json",encoding="utf8"))
 pdf = pdfplumber.open("./week06/汽车知识手册.pdf")
 pdf_content = []
 for page_idx in range(len(pdf.pages)):
@@ -38,7 +38,7 @@ for query_idx, feat in enumerate(question_feat):
     max_score_page_idx = score.argsort()[::-1][0] + 1
     questions[query_idx]['reference'] = 'page_' + str(max_score_page_idx)
 
-with open('submit_tfidf_retrieval_top1.json', 'w', encoding='utf8') as up:
+with open('./week06/submit_tfidf_retrieval_top1.json', 'w', encoding='utf8') as up:
     json.dump(questions, up, ensure_ascii=False, indent=4)
 
 
@@ -49,5 +49,5 @@ for query_idx, feat in enumerate(question_feat):
     max_score_page_idx = score.argsort()[::-1] + 1
     questions[query_idx]['reference'] = ['page_' + str(x) for x in max_score_page_idx[:10]]
 
-with open('submit_tfidf_retrieval_top10.json', 'w', encoding='utf8') as up:
+with open('./week06/submit_tfidf_retrieval_top10.json', 'w', encoding='utf8') as up:
     json.dump(questions, up, ensure_ascii=False, indent=4)

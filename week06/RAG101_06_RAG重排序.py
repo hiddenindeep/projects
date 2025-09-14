@@ -4,8 +4,8 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 import torch
 
 # 读取数据集
-questions = json.load(open("questions.json"))
-pdf = pdfplumber.open("汽车知识手册.pdf")
+questions = json.load(open("questions.json",encoding='utf8'))
+pdf = pdfplumber.open("./week06/汽车知识手册.pdf")
 pdf_content = []
 for page_idx in range(len(pdf.pages)):
     pdf_content.append({
@@ -14,14 +14,14 @@ for page_idx in range(len(pdf.pages)):
     })
 
 # 加载排序模型
-tokenizer = AutoTokenizer.from_pretrained('../models/BAAI/bge-reranker-base/')
-rerank_model = AutoModelForSequenceClassification.from_pretrained('../models/BAAI/bge-reranker-base/')
+tokenizer = AutoTokenizer.from_pretrained('./models/BAAI/bge-reranker-base/')
+rerank_model = AutoModelForSequenceClassification.from_pretrained('./models/BAAI/bge-reranker-base/')
 # rerank_model.cuda()
 rerank_model.eval()
 
 # 进行召回合并
-bge = json.load(open('submit_bge_sgement_retrieval_top10.json'))
-bm25 = json.load(open('submit_bm25_retrieval_top10.json'))
+bge = json.load(open('./week06/submit_bge_sgement_retrieval_top10.json'))
+bm25 = json.load(open('./week06/submit_bm25_retrieval_top10.json'))
 
 fusion_result = []
 k = 60
@@ -57,5 +57,5 @@ for q1, q2 in zip(bge, bm25):
     
     fusion_result.append(q1)
 
-with open('submit_fusion_bge+bm25_rerank_retrieval.json', 'w', encoding='utf8') as up:
+with open('./week06/submit_fusion_bge+bm25_rerank_retrieval.json', 'w', encoding='utf8') as up:
     json.dump(fusion_result, up, ensure_ascii=False, indent=4)

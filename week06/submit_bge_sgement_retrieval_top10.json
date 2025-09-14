@@ -1107,8 +1107,8 @@
         "question": "如何调整车辆的背光亮度？",
         "answer": "",
         "reference": [
-            "page_91",
             "page_90",
+            "page_91",
             "page_4",
             "page_264",
             "page_263",
@@ -1143,8 +1143,8 @@
             "page_92",
             "page_94",
             "page_4",
-            "page_91",
             "page_90",
+            "page_91",
             "page_253",
             "page_95",
             "page_83",
@@ -1703,8 +1703,8 @@
             "page_129",
             "page_131",
             "page_134",
-            "page_133",
             "page_132",
+            "page_133",
             "page_290",
             "page_289",
             "page_294",
@@ -1765,8 +1765,8 @@
         "reference": [
             "page_134",
             "page_136",
-            "page_132",
             "page_133",
+            "page_132",
             "page_80",
             "page_265",
             "page_266",
@@ -2388,8 +2388,8 @@
         "answer": "",
         "reference": [
             "page_178",
-            "page_184",
             "page_190",
+            "page_184",
             "page_195",
             "page_173",
             "page_180",
@@ -2549,14 +2549,14 @@
         "reference": [
             "page_172",
             "page_229",
-            "page_190",
             "page_184",
+            "page_190",
             "page_214",
             "page_177",
             "page_181",
             "page_205",
-            "page_189",
-            "page_183"
+            "page_183",
+            "page_189"
         ]
     },
     {
@@ -2953,8 +2953,8 @@
             "page_5",
             "page_201",
             "page_169",
-            "page_191",
             "page_185",
+            "page_191",
             "page_229",
             "page_208"
         ]
@@ -3619,10 +3619,10 @@
         "question": "如何通过车辆功能界面调整中央显示屏的亮度？",
         "answer": "",
         "reference": [
-            "page_263",
             "page_264",
-            "page_91",
+            "page_263",
             "page_90",
+            "page_91",
             "page_262",
             "page_94",
             "page_88",
@@ -4053,8 +4053,8 @@
         "reference": [
             "page_293",
             "page_296",
-            "page_131",
             "page_136",
+            "page_131",
             "page_290",
             "page_298",
             "page_288",

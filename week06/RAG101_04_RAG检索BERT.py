@@ -7,7 +7,7 @@ from sklearn.preprocessing import normalize
 from sentence_transformers import SentenceTransformer
 
 # 读取数据集
-questions = json.load(open("./week06/questions.json"))
+questions = json.load(open("./week06/questions.json",encoding="utf8"))
 pdf = pdfplumber.open("./week06/汽车知识手册.pdf")
 pdf_content = []
 for page_idx in range(len(pdf.pages)):
@@ -30,7 +30,7 @@ for query_idx, feat in enumerate(question_embeddings):
     max_score_page_idx = score.argsort()[::-1][0] + 1
     questions[query_idx]['reference'] = 'page_' + str(max_score_page_idx)
     
-with open('submit_bge_retrieval_top1.json', 'w', encoding='utf8') as up:
+with open('./week06/submit_bge_retrieval_top1.json', 'w', encoding='utf8') as up:
     json.dump(questions, up, ensure_ascii=False, indent=4)
 
 
@@ -39,13 +39,13 @@ for query_idx, feat in enumerate(question_embeddings):
     max_score_page_idx = score.argsort()[::-1] + 1
     questions[query_idx]['reference'] = ['page_' + str(x) for x in max_score_page_idx[:10]]
     
-with open('submit_bge_retrieval_top10.json', 'w', encoding='utf8') as up:
+with open('./week06/submit_bge_retrieval_top10.json', 'w', encoding='utf8') as up:
     json.dump(questions, up, ensure_ascii=False, indent=4)
 
 
 # jinaai
 # modelscope download --model jinaai/jina-embeddings-v2-base-zh --local_dir jinaai/jina-embeddings-v2-base-zh
-model = SentenceTransformer('../models/jinaai/jina-embeddings-v2-base-zh/')
+model = SentenceTransformer('./models/jinaai/jina-embeddings-v2-base-zh/')
 question_sentences = [x['question'] for x in questions]
 pdf_content_sentences = [x['content'] for x in pdf_content]
 
@@ -57,7 +57,7 @@ for query_idx, feat in enumerate(question_embeddings):
     max_score_page_idx = score.argsort()[::-1][0] + 1
     questions[query_idx]['reference'] = 'page_' + str(max_score_page_idx)
 
-with open('submit_jina_retrieval_top1.json', 'w', encoding='utf8') as up:
+with open('./week06/submit_jina_retrieval_top1.json', 'w', encoding='utf8') as up:
     json.dump(questions, up, ensure_ascii=False, indent=4)
 
 for query_idx, feat in enumerate(question_embeddings):
@@ -65,5 +65,5 @@ for query_idx, feat in enumerate(question_embeddings):
     max_score_page_idx = score.argsort()[::-1] + 1
     questions[query_idx]['reference'] = ['page_' + str(x) for x in max_score_page_idx[:10]]
 
-with open('submit_jina_retrieval_top10.json', 'w', encoding='utf8') as up:
+with open('./week06/submit_jina_retrieval_top10.json', 'w', encoding='utf8') as up:
     json.dump(questions, up, ensure_ascii=False, indent=4)
