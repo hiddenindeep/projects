@@ -757,7 +757,7 @@
     {
         "question": "LynkCo-Pilot系统在哪些情况下会提醒驾驶员接管车辆？",
         "answer": "",
-        "reference": "page_181"
+        "reference": "page_191"
     },
     {
         "question": "问题：LynkCo-Pilot系统在何种情况下会默认将跟车距离间隔设置为最远？",
@@ -787,7 +787,7 @@
     {
         "question": "LynkCo-Pilot系统在哪些情况下会提醒驾驶员接管车辆？",
         "answer": "",
-        "reference": "page_181"
+        "reference": "page_191"
     },
     {
         "question": "问题：LynkCo-Pilot系统在何种情况下会默认将跟车距离间隔设置为最远？",

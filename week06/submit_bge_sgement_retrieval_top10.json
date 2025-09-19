@@ -538,8 +538,8 @@
             "page_144",
             "page_196",
             "page_112",
-            "page_54",
             "page_55",
+            "page_54",
             "page_114"
         ]
     },
@@ -1107,8 +1107,8 @@
         "question": "如何调整车辆的背光亮度？",
         "answer": "",
         "reference": [
-            "page_90",
             "page_91",
+            "page_90",
             "page_4",
             "page_264",
             "page_263",
@@ -1143,8 +1143,8 @@
             "page_92",
             "page_94",
             "page_4",
-            "page_90",
             "page_91",
+            "page_90",
             "page_253",
             "page_95",
             "page_83",
@@ -1177,8 +1177,8 @@
             "page_4",
             "page_292",
             "page_295",
-            "page_91",
             "page_90",
+            "page_91",
             "page_88",
             "page_95"
         ]
@@ -1703,8 +1703,8 @@
             "page_129",
             "page_131",
             "page_134",
-            "page_132",
             "page_133",
+            "page_132",
             "page_290",
             "page_289",
             "page_294",
@@ -1747,8 +1747,8 @@
         "question": "请问这款汽车配备了哪些类型的USB接口用于车辆充电？",
         "answer": "",
         "reference": [
-            "page_132",
             "page_133",
+            "page_132",
             "page_136",
             "page_288",
             "page_131",
@@ -1765,8 +1765,8 @@
         "reference": [
             "page_134",
             "page_136",
-            "page_133",
             "page_132",
+            "page_133",
             "page_80",
             "page_265",
             "page_266",
@@ -1779,8 +1779,8 @@
         "question": "请问这款汽车配备了哪些类型的USB接口供前排乘客使用？",
         "answer": "",
         "reference": [
-            "page_133",
             "page_132",
+            "page_133",
             "page_136",
             "page_134",
             "page_137",
@@ -1816,8 +1816,8 @@
             "page_136",
             "page_129",
             "page_295",
-            "page_133",
             "page_132",
+            "page_133",
             "page_289",
             "page_6",
             "page_169"
@@ -2421,8 +2421,8 @@
         "reference": [
             "page_187",
             "page_181",
-            "page_185",
             "page_191",
+            "page_185",
             "page_196",
             "page_183",
             "page_189",
@@ -2453,8 +2453,8 @@
         "reference": [
             "page_172",
             "page_229",
-            "page_190",
             "page_184",
+            "page_190",
             "page_214",
             "page_177",
             "page_181",
@@ -2517,8 +2517,8 @@
         "reference": [
             "page_187",
             "page_181",
-            "page_185",
             "page_191",
+            "page_185",
             "page_196",
             "page_183",
             "page_189",
@@ -2555,8 +2555,8 @@
             "page_177",
             "page_181",
             "page_205",
-            "page_183",
-            "page_189"
+            "page_189",
+            "page_183"
         ]
     },
     {
@@ -2953,8 +2953,8 @@
             "page_5",
             "page_201",
             "page_169",
-            "page_185",
             "page_191",
+            "page_185",
             "page_229",
             "page_208"
         ]
@@ -3619,10 +3619,10 @@
         "question": "如何通过车辆功能界面调整中央显示屏的亮度？",
         "answer": "",
         "reference": [
-            "page_264",
             "page_263",
-            "page_90",
+            "page_264",
             "page_91",
+            "page_90",
             "page_262",
             "page_94",
             "page_88",
@@ -4164,8 +4164,8 @@
         "answer": "",
         "reference": [
             "page_306",
-            "page_191",
             "page_185",
+            "page_191",
             "page_205",
             "page_175",
             "page_164",

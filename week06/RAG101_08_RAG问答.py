@@ -65,11 +65,11 @@ def ask_gpt(content):
             max_error += 1
             continue
 
-bge = json.load(open('submit_bge_sgement_retrieval_top10.json'))
-bm25 = json.load(open('submit_bm25_retrieval_top10.json'))
+bge = json.load(open('./week06/submit_bge_sgement_retrieval_top10.json'))
+bm25 = json.load(open('./week06/submit_bm25_retrieval_top10.json'))
 
-questions = json.load(open("questions.json"))
-pdf = pdfplumber.open("汽车知识手册.pdf")
+questions = json.load(open("./week06/questions.json"))
+pdf = pdfplumber.open("./week06/汽车知识手册.pdf")
 pdf_content_dict = {}
 for page_idx in range(len(pdf.pages)):
     pdf_content_dict['page_' + str(page_idx + 1)] = pdf.pages[page_idx].extract_text()
@@ -146,5 +146,5 @@ for q1, q2 in zip(bge[:], bm25[:]):
 
     fusion_result.append(q1)
 
-with open('submit_fusion_bge+bm25_rerank_retrieval_glm4.json', 'w', encoding='utf8') as up:
+with open('./week06/submit_fusion_bge+bm25_rerank_retrieval_glm4.json', 'w', encoding='utf8') as up:
     json.dump(fusion_result, up, ensure_ascii=False, indent=4)

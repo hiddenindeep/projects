@@ -4,7 +4,7 @@ from transformers import AutoModelForSequenceClassification, AutoTokenizer
 import torch
 
 # 读取数据集
-questions = json.load(open("questions.json",encoding='utf8'))
+questions = json.load(open("./week06/questions.json",encoding='utf8'))
 pdf = pdfplumber.open("./week06/汽车知识手册.pdf")
 pdf_content = []
 for page_idx in range(len(pdf.pages)):
@@ -26,7 +26,6 @@ bm25 = json.load(open('./week06/submit_bm25_retrieval_top10.json'))
 fusion_result = []
 k = 60
 for q1, q2 in zip(bge, bm25):
-    print(len(fusion_result), len(bge))
     fusion_score = {}
     for idx, q in enumerate(q1['reference']):
         if q not in fusion_score:
