@@ -3,4 +3,8 @@ models/
 01-intent-classify/
 02-sentiment-classify/assets/weights/best_model.pt
 word2vec_model.bin
+week07/cmrc2018_public
+week07/msra
+week07/qa-bert-model
+week07/ner-bert-model
 .idea/
