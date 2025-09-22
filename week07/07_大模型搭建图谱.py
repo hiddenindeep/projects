@@ -9,7 +9,7 @@ from typing import List, Dict
 # 初始化OpenAI客户端（使用阿里云百炼平台）
 client = openai.OpenAI(
     # 填写你的 https://bailian.console.aliyun.com/?tab=model#/api-key
-    api_key="sk-b2fcae19cd1f4a7dbe605ce9fc8ef3be",
+    api_key="sk-12ca7074269f49e1afaf221d496f727f",
     base_url="https://dashscope.aliyuncs.com/compatible-mode/v1",
 )
 

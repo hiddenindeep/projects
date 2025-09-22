@@ -18,6 +18,7 @@ dev = json.load(open('./cmrc2018_public/dev.json'))
 tokenizer = BertTokenizerFast.from_pretrained('../models/google-bert/bert-base-chinese')
 model = BertForQuestionAnswering.from_pretrained('../models/google-bert/bert-base-chinese')
 
+# 输入 11 token -》 13 token -》 13 * 768 （特征） -》 13 * 2 对应回答在原文的位置（通过开头和结尾确定的）
 
 # 准备训练数据
 def prepare_dataset(data):

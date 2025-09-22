@@ -1,4 +1,4 @@
-import networkx as nx
+import networkx as nx # 图创建、操作、图算法、图可视化
 import matplotlib.pyplot as plt
 import numpy as np
 
@@ -10,6 +10,7 @@ print(f"节点数量: {G.number_of_nodes()}")
 print(f"边数量: {G.number_of_edges()}")
 
 # 2. 计算PageRank值
+# pagerank 图中所有节点的重要性
 pagerank = nx.pagerank(G, alpha=0.85)  # alpha是阻尼系数，通常设为0.85
 
 # 3. 提取PageRank值用于节点大小

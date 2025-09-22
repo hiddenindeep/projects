@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 # 1. 创建一个有向图 (directed graph)
 # 你也可以使用 nx.Graph() 创建一个无向图 (undirected graph)
-G = nx.DiGraph()
+G = nx.DiGraph() # 不是图数据库，创建图和图操作的库
 
 # 2. 添加节点 (add nodes)
 G.add_node("A", type="start")

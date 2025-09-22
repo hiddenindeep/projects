@@ -1,17 +1,39 @@
 import codecs
 import numpy as np
+
+"""BERT分类
+- 文本分类： 输入文本 -》 类别     BertForSequenceClassification
+- 文本匹配： 输入 句子1 and 句子2 -》 关系    BertForNextSentencePrediction
+- token分类： 输入句子 -》 token类别（实体识别）   BertForTokenClassification
+- 抽取式问答： 输入提问 和 问答 -》 开始位置 和 结束位置 分类  BertForQuestionAnswering
+"""
+
+"""GPT生成
+- 文本分类： 输入文本 -》 类别   gpt 生成的类别
+- 文本问答： 输入文本 -》 回答   gpt 生成的回答
+"""
+
+"""
+BIO标注格式
+    定义实体类型：PERSON、CITY、DATE
+    
+小明小王都是我的好朋友
+B-PERSON I-PERSON B-PERSON I-PERSON O O O O O O O
+
+11 token -》 13 token （2个特殊token）-》 13 * 768  -》 13 * 7
+"""
+
 from transformers import (
-    BertTokenizerFast,
-    BertForTokenClassification,
-    TrainingArguments,
-    Trainer,
+    BertTokenizerFast, # 分词器 BertTokenizer 升级版  （rust语言实现）
+    BertForTokenClassification, # 模型
+    TrainingArguments, # trainer 参数
+    Trainer, # trainer
     DataCollatorForTokenClassification
 )
-from datasets import Dataset
+from datasets import Dataset # 自定义数据集
 import torch
 from sklearn.metrics import accuracy_score, classification_report
 import warnings
-
 warnings.filterwarnings('ignore')
 
 # 检查设备
@@ -24,18 +46,18 @@ id2label = {i: label for i, label in enumerate(tag_type)}
 label2id = {label: i for i, label in enumerate(tag_type)}
 
 # 加载训练数据
-train_lines = codecs.open('./msra/train/sentences.txt').readlines()[:1000]
+train_lines = codecs.open('./msra/train/sentences.txt',encoding='utf-8').readlines()[:1000]
 train_lines = [x.replace(' ', '').strip() for x in train_lines]
 
-train_tags = codecs.open('./msra/train/tags.txt').readlines()[:1000]
+train_tags = codecs.open('./msra/train/tags.txt',encoding='utf-8').readlines()[:1000]
 train_tags = [x.strip().split(' ') for x in train_tags]
 train_tags = [[label2id[x] for x in tag] for tag in train_tags]
 
 # 加载验证数据
-val_lines = codecs.open('./msra/val/sentences.txt').readlines()[:100]
+val_lines = codecs.open('./msra/val/sentences.txt',encoding='utf-8').readlines()[:100]
 val_lines = [x.replace(' ', '').strip() for x in val_lines]
 
-val_tags = codecs.open('./msra/val/tags.txt').readlines()[:100]
+val_tags = codecs.open('./msra/val/tags.txt',encoding='utf-8').readlines()[:100]
 val_tags = [x.strip().split(' ') for x in val_tags]
 val_tags = [[label2id[x] for x in tag] for tag in val_tags]
 
@@ -103,8 +125,9 @@ train_dataset = prepare_dataset(train_lines, train_tags)
 eval_dataset = prepare_dataset(val_lines, val_tags)
 
 # 加载模型
+# 模型定义好的规范模型
 model = BertForTokenClassification.from_pretrained(
-    '../models/google-bert/bert-base-chinese/',
+    '../models/google-bert/bert-base-chinese/', # 之前文本分类的模型
     num_labels=len(tag_type),
     id2label=id2label,
     label2id=label2id
@@ -131,7 +154,8 @@ training_args = TrainingArguments(
     no_cuda=(device.type != "cuda"),  # 如果不是CUDA设备，禁用CUDA
 )
 
-# 数据收集器
+# 数据收集器（数据预处理的过程）
+# 取长补短，相同batch下的文本 转换 相同的长度
 data_collator = DataCollatorForTokenClassification(
     tokenizer=tokenizer,
     padding=True
@@ -205,7 +229,7 @@ print(f"评估结果: {eval_results}")
 
 # 测试预测
 test_sentences = [
-    '今天我约了王浩在恭王府吃饭，晚上在天安门逛逛。',
+    '今天我约了王浩在恭王府吃饭，晚上在天安门逛逛。', # 人、位置
     '人工智能是未来的希望，也是中国和美国的冲突点。',
     '明天我们一起在海淀吃个饭吧，把叫刘涛和王华也叫上。',
     '同煤集团同生安平煤业公司发生井下安全事故 19名矿工遇难',
@@ -302,3 +326,8 @@ for sentence in test_sentences:
         print(f"处理句子时出错: {sentence}")
         print(f"错误信息: {e}")
         print()
+
+
+# qkv 是 自注意力机制 -》 transformer 组成 -》 bert / gpt -》 实体识别任务
+
+# bert 用在其他任务，都需要微调

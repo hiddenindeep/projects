@@ -55,6 +55,7 @@ def process_func(example, tokenizer, max_length=384):
     将指令和输出转换为模型训练格式
     """
     # 构建指令部分
+    # ChatML 标准
     instruction_text = f"<|im_start|>system\n现在进行意图分类任务<|im_end|>\n<|im_start|>user\n{example['instruction'] + example['input']}<|im_end|>\n<|im_start|>assistant\n"
     instruction = tokenizer(instruction_text, add_special_tokens=False)
 
@@ -84,8 +85,13 @@ def process_func(example, tokenizer, max_length=384):
 # 配置LoRA
 def setup_lora(model):
     """设置LoRA配置并应用到模型"""
+
+    # 对什么模型，以什么方式进行微调
     config = LoraConfig(
+        # 任务类型，自回归语言建模
         task_type=TaskType.CAUSAL_LM,
+
+        # 对什么层的默写模块进行高效微调
         target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
         inference_mode=False,
         r=8,
@@ -244,7 +250,7 @@ def test_single_example():
 
 if __name__ == "__main__":
     # 执行主函数
-    # result_df = main()
+    result_df = main()
 
     # 单独测试
     test_single_example()
