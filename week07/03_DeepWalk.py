@@ -3,7 +3,7 @@ import numpy as np
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import cosine_similarity
 import matplotlib.pyplot as plt
-from gensim.models import Word2Vec
+from gensim.models import Word2Vec # NLP 语言模型
 import random
 
 # 设置随机种子以确保结果可重现
@@ -13,6 +13,8 @@ random.seed(42)
 
 # 1. 创建一个有逻辑意义的社交网络图
 def create_social_network():
+    # 模拟创建的图， networkx
+
     G = nx.Graph()
 
     # 创建三个社交圈子：研究人员、艺术家和运动员
@@ -85,6 +87,8 @@ def generate_random_walks(G, num_walks, walk_length):
 
 # 3. 使用Word2Vec学习节点表示
 def learn_embeddings(walks, dimensions=128, window_size=5):
+    # 输入文本序列  -》 词向量
+    # 输入图节点序列  -》 节点向量
     model = Word2Vec(
         walks,
         vector_size=dimensions,
