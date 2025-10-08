@@ -1,5 +1,6 @@
 import codecs
 import numpy as np
+from peft import LoraConfig, TaskType, get_peft_model
 
 """BERT分类
 - 文本分类： 输入文本 -》 类别     BertForSequenceClassification
@@ -28,7 +29,8 @@ from transformers import (
     BertForTokenClassification, # 模型
     TrainingArguments, # trainer 参数
     Trainer, # trainer
-    DataCollatorForTokenClassification
+    DataCollatorForTokenClassification,
+    EarlyStoppingCallback
 )
 from datasets import Dataset # 自定义数据集
 import torch
@@ -133,6 +135,26 @@ model = BertForTokenClassification.from_pretrained(
     label2id=label2id
 )
 
+# # 配置LoRA
+# def setup_lora(model):
+#     config = LoraConfig(
+#         task_type=TaskType.TOKEN_CLS,
+#         # 尝试不同的目标模块
+#         target_modules=["query", "key", "value","output.dense"],
+#         inference_mode=False,
+#         r=32,  # 增大r值
+#         lora_alpha=32,  # 增大alpha值
+#         lora_dropout=0.05  # 减小dropout
+#     )
+#     model = get_peft_model(model, config)
+#     model.print_trainable_parameters()
+#     return model
+
+# #设置LoRA
+# print("设置LoRA...")
+# model.enable_input_require_grads()
+# model = setup_lora(model)
+
 # 将模型移动到相应设备
 model.to(device)
 
@@ -142,11 +164,13 @@ training_args = TrainingArguments(
     learning_rate=3e-5,
     per_device_train_batch_size=16,
     per_device_eval_batch_size=16,
-    num_train_epochs=4,
+    num_train_epochs=3,
     weight_decay=0.01,
     logging_dir='./logs',
     logging_steps=100,
     save_strategy="epoch",
+    # eval_strategy="epoch",
+    # load_best_model_at_end=True,
     metric_for_best_model="eval_loss",
     greater_is_better=False,
     report_to="none",
@@ -160,7 +184,6 @@ data_collator = DataCollatorForTokenClassification(
     tokenizer=tokenizer,
     padding=True
 )
-
 
 # 定义计算指标的函数
 def compute_metrics(p):
@@ -211,7 +234,8 @@ trainer = Trainer(
     eval_dataset=eval_dataset,
     tokenizer=tokenizer,
     data_collator=data_collator,
-    compute_metrics=compute_metrics,
+    compute_metrics=compute_metrics
+    # callbacks=[EarlyStoppingCallback(early_stopping_patience=3)]
 )
 
 # 开始训练

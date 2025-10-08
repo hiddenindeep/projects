@@ -12,6 +12,8 @@ from peft import LoraConfig, TaskType, get_peft_model
 from tqdm import tqdm
 import torch
 
+device = torch.device("mps" if torch.backends.mps.is_available() else "cuda" if torch.cuda.is_available() else "cpu")
+print(f"使用设备: {device}")
 
 # 数据加载和预处理
 def load_and_preprocess_data():
@@ -41,9 +43,12 @@ def initialize_model_and_tokenizer(model_path):
     # 加载模型
     model = AutoModelForCausalLM.from_pretrained(
         model_path,
-        device_map="auto",
-        torch_dtype=torch.float16  # 使用半精度减少内存占用
+        #device_map="auto",
+        torch_dtype=torch.float32  # 使用半精度减少内存占用
     )
+
+    if device.type == "mps":
+        model = model.to(torch.float32)
 
     return tokenizer, model
 
@@ -150,14 +155,17 @@ def predict_intent(model, tokenizer, text, device='cpu'):
             do_sample=True,
             temperature=0.1,  # 降低温度以获得更确定的输出
             pad_token_id=tokenizer.pad_token_id,
-            eos_token_id=tokenizer.eos_token_id
+            eos_token_id=tokenizer.eos_token_id,
+            early_stopping=True,
+            num_beams=1,
+            no_repeat_ngram_size=2
         )
 
     # 提取生成的文本（去掉输入部分）
     generated_ids = generated_ids[:, model_inputs.input_ids.shape[1]:]
     response = tokenizer.batch_decode(generated_ids, skip_special_tokens=True)[0]
 
-    return response.strip()
+    return response.strip().split('#')[0]
 
 
 # 批量预测
@@ -226,9 +234,9 @@ def main():
     trainer.train()
 
     # 8. 保存模型
-    # print("保存模型...")
-    # trainer.save_model()
-    # tokenizer.save_pretrained("./output_Qwen")
+    print("保存模型...")
+    trainer.save_model()
+    tokenizer.save_pretrained("./output_Qwen1.5")
 
 # 单独测试函数
 def test_single_example():
@@ -250,7 +258,7 @@ def test_single_example():
 
 if __name__ == "__main__":
     # 执行主函数
-    result_df = main()
+    #result_df = main()
 
     # 单独测试
     test_single_example()
