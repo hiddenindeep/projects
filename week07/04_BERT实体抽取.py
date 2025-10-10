@@ -48,18 +48,18 @@ id2label = {i: label for i, label in enumerate(tag_type)}
 label2id = {label: i for i, label in enumerate(tag_type)}
 
 # 加载训练数据
-train_lines = codecs.open('./msra/train/sentences.txt',encoding='utf-8').readlines()[:1000]
+train_lines = codecs.open('./msra/train/sentences.txt',encoding='utf-8').readlines()[:10000]
 train_lines = [x.replace(' ', '').strip() for x in train_lines]
 
-train_tags = codecs.open('./msra/train/tags.txt',encoding='utf-8').readlines()[:1000]
+train_tags = codecs.open('./msra/train/tags.txt',encoding='utf-8').readlines()[:10000]
 train_tags = [x.strip().split(' ') for x in train_tags]
 train_tags = [[label2id[x] for x in tag] for tag in train_tags]
 
 # 加载验证数据
-val_lines = codecs.open('./msra/val/sentences.txt',encoding='utf-8').readlines()[:100]
+val_lines = codecs.open('./msra/val/sentences.txt',encoding='utf-8').readlines()[:1000]
 val_lines = [x.replace(' ', '').strip() for x in val_lines]
 
-val_tags = codecs.open('./msra/val/tags.txt',encoding='utf-8').readlines()[:100]
+val_tags = codecs.open('./msra/val/tags.txt',encoding='utf-8').readlines()[:1000]
 val_tags = [x.strip().split(' ') for x in val_tags]
 val_tags = [[label2id[x] for x in tag] for tag in val_tags]
 
@@ -135,25 +135,25 @@ model = BertForTokenClassification.from_pretrained(
     label2id=label2id
 )
 
-# # 配置LoRA
-# def setup_lora(model):
-#     config = LoraConfig(
-#         task_type=TaskType.TOKEN_CLS,
-#         # 尝试不同的目标模块
-#         target_modules=["query", "key", "value","output.dense"],
-#         inference_mode=False,
-#         r=32,  # 增大r值
-#         lora_alpha=32,  # 增大alpha值
-#         lora_dropout=0.05  # 减小dropout
-#     )
-#     model = get_peft_model(model, config)
-#     model.print_trainable_parameters()
-#     return model
+# 配置LoRA
+def setup_lora(model):
+    config = LoraConfig(
+        task_type=TaskType.TOKEN_CLS,
+        # 尝试不同的目标模块
+        target_modules=["query", "key", "value","output.dense"],
+        inference_mode=False,
+        r=32,  # 增大r值
+        lora_alpha=32,  # 增大alpha值
+        lora_dropout=0.05  # 减小dropout
+    )
+    model = get_peft_model(model, config)
+    model.print_trainable_parameters()
+    return model
 
-# #设置LoRA
-# print("设置LoRA...")
-# model.enable_input_require_grads()
-# model = setup_lora(model)
+#设置LoRA
+print("设置LoRA...")
+model.enable_input_require_grads()
+model = setup_lora(model)
 
 # 将模型移动到相应设备
 model.to(device)

@@ -10,13 +10,35 @@ from transformers import (
 from datasets import Dataset
 import numpy as np
 
+from peft import LoraConfig, TaskType, get_peft_model
+
 # 加载数据
-train = json.load(open('./cmrc2018_public/train.json'))
-dev = json.load(open('./cmrc2018_public/dev.json'))
+train = json.load(open('./cmrc2018_public/train.json',encoding="utf-8"))
+dev = json.load(open('./cmrc2018_public/dev.json',encoding="utf-8"))
 
 # 初始化tokenizer和模型
 tokenizer = BertTokenizerFast.from_pretrained('../models/google-bert/bert-base-chinese')
 model = BertForQuestionAnswering.from_pretrained('../models/google-bert/bert-base-chinese')
+
+# 配置LoRA
+def setup_lora(model):
+    config = LoraConfig(
+        task_type=TaskType.QUESTION_ANS,
+        # 尝试不同的目标模块
+        target_modules=["query", "key", "value","attention.output.dense"],
+        inference_mode=False,
+        r=16,
+        lora_alpha=32,
+        lora_dropout=0.05
+    )
+    model = get_peft_model(model, config)
+    model.print_trainable_parameters()
+    return model
+
+#设置LoRA
+print("设置LoRA...")
+model.enable_input_require_grads()
+model = setup_lora(model)
 
 # 输入 11 token -》 13 token -》 13 * 768 （特征） -》 13 * 2 对应回答在原文的位置（通过开头和结尾确定的）
 
@@ -45,15 +67,15 @@ val_paragraphs, val_questions, val_answers = prepare_dataset(dev)
 
 # 创建数据集字典
 train_dataset_dict = {
-    'context': train_paragraphs[:1000],
-    'question': train_questions[:1000],
-    'answers': train_answers[:1000]
+    'context': train_paragraphs[:10000],
+    'question': train_questions[:10000],
+    'answers': train_answers[:10000]
 }
 
 val_dataset_dict = {
-    'context': val_paragraphs[:100],
-    'question': val_questions[:100],
-    'answers': val_answers[:100]
+    'context': val_paragraphs[:1000],
+    'question': val_questions[:1000],
+    'answers': val_answers[:1000]
 }
 
 # 转换为Hugging Face Dataset
