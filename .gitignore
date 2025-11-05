@@ -10,3 +10,4 @@ week07/ner-bert-model
 week07/output_Qwen1.5
 .idea/
 .DS_Store
+data/
