@@ -1,6 +1,6 @@
 import time
 import os
-os.environ["OPENAI_API_KEY"] = "sk-aa76fcf6520f48d38b356ae436c16af0"
+os.environ["OPENAI_API_KEY"] = "sk-cbf9e44f6f164d2b9d4b9bbf110bbd6c"
 os.environ["OPENAI_BASE_URL"] = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 
 import asyncio

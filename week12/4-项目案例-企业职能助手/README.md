@@ -57,3 +57,6 @@ mcp 服务的定义： @mcp.tool
 实现过程包括了：集成公司内部已有内部服务到MCP Server，集成了50+工具，编写带状态缓存的聊天助手，可以结合用户请求进行选择工具 进行调用和回答。
 相比于已有的内部助手，基于的MCP职能助手更加可靠和可扩展，可以不断增加工具。。。
 
+
+python mcp_server_main.py
+streamlit run streamlit_demo.py

@@ -5,7 +5,7 @@
 import os
 
 # https://bailian.console.aliyun.com/?tab=model#/api-key
-os.environ["OPENAI_API_KEY"] = "sk-78cc4e9ac8f44efdb207b7232e1ae6d8"
+os.environ["OPENAI_API_KEY"] = "sk-cbf9e44f6f164d2b9d4b9bbf110bbd6c"
 os.environ["OPENAI_BASE_URL"] = "https://dashscope.aliyuncs.com/compatible-mode/v1"
 
 from agents import Agent, Runner

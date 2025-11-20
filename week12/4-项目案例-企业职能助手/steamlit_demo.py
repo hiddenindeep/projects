@@ -32,6 +32,10 @@ with st.sidebar:
     model_name = st.selectbox("选择模型", ["qwen-flash", "qwen-max"])
     use_tool = st.checkbox("使用工具")
 
+    # 显示工具列表
+    tool_list_container = st.empty()
+
+
 # 初始化的对话
 if "messages" not in st.session_state.keys():
     st.session_state.messages = [
@@ -54,6 +58,33 @@ def clear_chat_history():
 
 st.sidebar.button('清空聊天', on_click=clear_chat_history)
 
+#获取当前可用的工具列表
+async def load_tools():
+    """
+    从 MCP Server 获取当前可用的工具列表
+    """
+    async with MCPServerSse(
+            name="SSE Python Server",
+            params={"url": "http://localhost:8900/sse"},
+            cache_tools_list=False,
+    ) as mcp_server:
+
+        tools = await mcp_server.list_tools()
+        #Available tools: ['get_today_daily_news', 'get_douyin_hot_news', 'get_github_hot_news', 'get_toutiao_hot_news', 'get_sports_news', 'get_today_familous_saying', 'get_today_motivation_saying', 'get_today_working_saying', 'get_city_weather', 'get_address_detail', 'get_tel_info', 'get_scenic_info', 'get_flower_info', 'get_rate_transform', 'sentiment_classification', 'summary_work_history']
+        return tools
+
+def filter_news_tools(tools):
+    """筛选新闻类工具"""
+    news_tools = ['get_today_daily_news', 'get_douyin_hot_news', 'get_github_hot_news', 
+                  'get_toutiao_hot_news', 'get_sports_news']
+    return [tool for tool in tools if tool.name in news_tools]
+
+def filter_utility_tools(tools):
+    """筛选实用工具类"""
+    utility_tools = ['get_city_weather', 'get_address_detail', 'get_tel_info', 
+                     'get_scenic_info', 'get_flower_info', 'get_rate_transform', 
+                     'sentiment_classification', 'summary_work_history']
+    return [tool for tool in tools if tool.name in utility_tools]
 
 async def get_model_response(prompt, model_name, use_tool):
     """
@@ -69,7 +100,8 @@ async def get_model_response(prompt, model_name, use_tool):
             cache_tools_list=False, # 如果 True 第一次调用后，缓存mcp server 所有工具信息，不再进行list tool
             # tool_filter 对tool筛选（可以写一个函数筛选，也可以通过黑名单/白名单筛选）
             # client_session_timeout_seconds 超时时间
-            client_session_timeout_seconds=20
+            client_session_timeout_seconds=20,
+            tool_filter=lambda tools: filter_news_tools(tools) if "新闻" in prompt else filter_utility_tools(tools)
     ) as mcp_server:
         external_client = AsyncOpenAI(
             api_key=key,
@@ -103,6 +135,21 @@ async def get_model_response(prompt, model_name, use_tool):
 
 
 if len(key) > 1:
+    # ===== 新增：侧边栏加载工具列表 =====
+    if use_tool:
+        try:
+            tools = asyncio.run(load_tools())
+            tool_list_container.markdown("### 🔧 可用工具列表")
+            tools_info = []  # 收集所有工具信息
+            for tool in tools:
+                tools_info.append(f"""**{tool.name}**""")
+            tool_list_container.markdown("\n".join(tools_info))
+        except Exception as e:
+            tool_list_container.error(f"加载工具失败：{e}")
+
+    else:
+        tool_list_container.markdown("")  # 不勾选时清空显示
+
     if prompt := st.chat_input():
         st.session_state.messages.append({"role": "user", "content": prompt})
         with st.chat_message("user"): # 用户输入

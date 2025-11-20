@@ -66,7 +66,26 @@ def get_rate_transform(
 @mcp.tool
 def sentiment_classification(text: Annotated[str, "The text to analyze"]):
     """Classifies the sentiment of a given text."""
-    pass
+    try:
+        # 使用百度AI开放平台的情感分析API
+        # 注意：这里需要先获取access_token
+        access_token = "24.9868beabaaf0bd8cefc0a412f0a66b4e.2592000.1766218607.282335-120934651"
+        url = f"https://aip.baidubce.com/rpc/2.0/nlp/v1/sentiment_classify?access_token={access_token}"
+        payload = {"text": text}
+        response = requests.post(url, json=payload).json()
+        
+        if "error_code" in response:
+            return {"error": response.get("error_msg", "API调用失败")}
+            
+        # 返回情感分析结果
+        return {
+            "text": text,
+            "sentiment": response.get("items", [{}])[0].get("sentiment", 0),  # 0:负向, 1:中性, 2:正向
+            "confidence": response.get("items", [{}])[0].get("confidence", 0)  # 置信度
+        }
+    except Exception as e:
+        return {"error": str(e)}
+
 
 @mcp.tool
 def summary_work_history(text: Annotated[str, "The text to summarize"]):
