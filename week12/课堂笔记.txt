@@ -1,0 +1,167 @@
+多模态问答 -》 倾向于复用单模态处理逻辑 / 复用已有的纯文本rag逻辑
+
+对象存储 云平台用于存储文件/图或视频的平台，类似网盘：
+    - 面向网站/企业的资源存储的，可以通过url房间
+    - 也可以sdk进行管理
+
+https://developer.qiniu.com/kodo/3939/overview-of-the-api
+
+
+taskweaver： 基于代码执行的执行体
+dify：基于ui 拖拽的workflow平台
+    - 计算体脂比：workflow
+    - 实现论文写作：agent（生成目录、查找文献、写每个章节、生成图表）
+
+workflow 比较 透明，适合用于简单的任务，比较小白适合入门
+agent 适合复杂的不确定 或 需要接受反馈的复杂任务，不透明 不是特别可控，在复杂任务上比较使用，比较进阶；
+
+
+现在企业 workflow 多一些， agent 与 workflow 并没有区分的很开；
+
+
+dify vs openai-agent：
+    - dify 是一个开发平台，通过拖拽方式搭建workflow
+    - openai-agent 是 python 中的一个库，偏向后端workflow / mcp /tools调用的框架；
+    - 服务端 或 在代码中定义workflow，推荐使用openai-agent
+
+后端，服务端 开发 agent，推荐openai-agent，不推荐langchain （很过时，基本上不使用，面试可能提到）；
+    完全使用底层的大模型调用，也可以 openai 底层sdk
+    openai-agent 简化 一些大模型代码，大模型调用、上下文共享、编排、mcp
+低代码，非程序员 和 带UI场景下，推荐dify
+
+
+mcp 是一个 ai应用方向的协议，便于ai应用调用外部工具 & 交互的标准协议。
+
+mcp 程序主要的组成： host、client、server
+
+实际写程序，agent 框架 调用大模型的时候 选择 从 mcp server中执行一个工具，执行结果汇总到大模型中进行回答。
+
+
+mcp server vs fastapi 定义的服务之间有什么关系？
+    - mcp 服务 侧重于 ai应用的交互协议，ai应用与外部工具的接口
+    - fastapi 服务 是以http定义的前后端交互的接口，更加通用的接口定义
+
+fastapi服务 -》 mcp服务 -》 ai 应用
+
+mcp tool 是 封装在mcp server 可以动态管理、检索和执行；
+tools / function call 在本地写完成可选的函数定义，gpt 生成调用方式（传入参数）；
+
+
+https://streamlit.io/
+    使用python写带逻辑的前端页面的工具
+
+
+# 下一课内容
+- chat bi，数据智能化 问答
+
+# 课后作业
+
+1. 复现现有职能助手代码，环境要有 fastmcp、streamlit、openai-agent 库。
+python mcp_server_main.py
+streamlit run streamlit_demo.py
+
+2. 尝试新定义一个工具，进行文本情感分析，输入文本判断文本的情感类别。最终可以在界面通过agent 在对话中调用这个工具。
+
+@mcp.tool
+def sentiment_classification(text: Annotated[str, "The text to analyze"]):
+    """Classifies the sentiment of a given text."""
+    pass
+
+
+3. 尝试需要在对话中选择工具，增加 tool_filter 的逻辑。
+    - 查询新闻的时候，只调用news的工具
+    - 调用工具的时候，只调用tools的工具
+
+
+# 课堂提问
+
+1、miniio 是不是也可以用于对象存储？
+
+对象存储 -》 企业的基础的一个基础的数据存储功能，需要稳定性，比较建议使用大平台的（阿里云、腾讯云、七牛云）
+
+对象存储可以绑定cdn，做计费比较方便的
+
+
+2、金融企业数据安全企业 的 对象存储？
+
+本地对象存储，本地的文件存储和分发服务；
+
+
+3、论文写作是否可以使用workflow？
+
+论文有不同的章节，4个章节，5个章节；
+
+论文也有不同的指数要求，2w， 5k；
+
+人去写论文，也是迭代的过程： 确定目标 -》 查找文献 -》 查找数据 -》 汇总 得到结论 -》 写段落
+
+
+4、openai-agent vs langgraph？
+
+openai-agent 发展的比较好（企业用的比较多），agent定义为一次大模型调用，类似代码定义工作流
+
+langgraph 用图的方式定义agent，复杂的 & 有状态转换的程序，不是工作流；
+
+
+5、协议 ？ 服务？
+
+协议（http、mcp）定义的一个交互规范
+
+服务 可以理解为实现某个功能的一个函数
+
+6、agent 在选择tool时候，会结合tool名字 + 定义
+
+7、如果mcp tool 很多的情况下，推荐先agent 中 圈定tool的范围，可以通过名字 或 tag 或 前缀 筛选一下；
+
+8、openai agent 如何选择tool？ 我后序回答；
+
+9、公司的服务，需要定义定义mcp server
+
+阿里云mcp server 是公开的一些工具，肯定无法满足我们的要求
+
+10、 langchain 现在用的不多，推荐 openai agent  比较轻量；
+
+11、tool的说明 在函数名前面还是后面？
+
+参考标准写法：
+
+@mcp.tool
+def get_rate_transform(
+    source_coin: Annotated[str, "The three-letter code (e.g., USD, CNY) for the source currency."],
+    aim_coin: Annotated[str, "The three-letter code (e.g., EUR, JPY) for the target currency."],
+    money: Annotated[Union[int, float], "The amount of money to convert."]
+):
+    """Calculates the currency exchange conversion amount between two specified coins."""
+    try:
+        return requests.get(f"https://whyta.cn/api/tx/fxrate?key={TOKEN}&fromcoin={source_coin}&tocoin={aim_coin}&money={money}").json()["result"]["money"]
+    except:
+        return []
+
+12、mcp的tool是一次调用一个吗？
+
+agent选择一个调用
+
+13、如果提问不是mcp tool中的？
+
+直接llm回答。
+
+14、多模态rag问答，暂时没有代码。下周 下下周。
+
+15、大模型加速推理。
+现在是直接用vllm / sglang 居多，内在都是概念的知识 -》 面试用。
+
+16、mcp.tool 内在定义 可以是函数，也可以是其他接口请求，也可以是rag
+
+17、飞书提供的智能问答 和 知识库问答 会不会代替我们。
+限制1: 很多公司的文档、知识库、数据不再飞书上，飞书也不能集成所有的功能。还是需要定制化开发。
+限制2: 飞书做的ai功能就一定好吗？
+
+18、qwen-flash、qwen-max、 qwen3开源版本的区别？
+qwen-flash、qwen-max 都是 云端部署的商业版本
+qwen3-XXB开源版本
+
+19、chatbi 就是一个agent，也会使用rag。
+
+20、onnx runtime 是对 cpu 加速的工具。
+
+21、大模型应用的中后端服务的设计。
