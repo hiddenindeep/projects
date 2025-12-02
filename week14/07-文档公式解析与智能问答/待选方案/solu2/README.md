@@ -1,0 +1,4 @@
+运行read_pdf_or_md.py得到每个pdf文件的文字内容
+基于文本匹配得到每个问题对应的知识matched.csv
+
+运行Qwen_文档公式解析与智能问答挑战赛.py得到答案

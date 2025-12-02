@@ -1,0 +1,17 @@
+# 核心功能库
+pandas
+sympy==1.14.0
+PyMuPDF==1.26.4
+ollama==0.5.3
+tqdm==4.67.1
+
+# 机器学习 & AI 库
+torch==2.8.0
+sentence-transformers==5.1.0
+# transformers 会被 sentence-transformers 自动安装
+
+# SymPy 的 LaTeX 解析依赖
+antlr4-python3-runtime==4.11.0
+
+# 建议固定numpy版本以增加稳定性
+numpy==2.2.6

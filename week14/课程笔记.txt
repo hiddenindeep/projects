@@ -1,0 +1,233 @@
+三个推理模型
+    - openai-o1 24-9
+    - ds-r1
+    - qwen3
+
+推理模型：
+    - 擅长数学、代码、逻辑推理的任务
+    - thinking / 思考过程 也是有token消耗
+文本问答、多模态问答、信息抽取、情感分析 =》 常规模型
+
+1、推荐阅读的论文：
+    重点需要阅读：deepseek-r1 （前11页） 、qwen3 （前5、6页） 高频面试点
+
+2、01_Qwen3.ipynb（只有推理过程，并不包括训练过程为grpo微调过程）： qwen模型的架构、使用的一些特殊的层。
+
+The architecture of the Qwen3 dense models is similar to Qwen2.5 (Yang et al., 2024b), including using
+Grouped Query Attention (GQA, Ainslie et al., 2023), SwiGLU (Dauphin et al., 2017), Rotary Positional
+Embeddings (RoPE, Su et al., 2024), and RMSNorm (Jiang et al., 2023) with pre-normalization. Besides,
+we remove QKV-bias used in Qwen2 (Yang et al., 2024a) and introduce QK-Norm (Dehghani et al., 2023)
+to the attention mechanism to ensure stable training for Qwen3. Key information on model architecture
+is provided in Table 1.
+
+3、02_Qwen3-MoE.ipynb
+   什么适合用dense 模型， 什么适合用moe模型？      云端qwen-max  是一个moe模型
+   显存直接相关的，大部分任务都是可以dense 模型；
+
+4、Qwen3 强化学习微调，避免微调，很少微调 -》 并不能保证微调就一定会得到更好的效果。
+peft，https://huggingface.co/docs/peft/index， 实现了一些高效微调的方法
+trl，https://huggingface.co/docs/trl/index 实现了强化学习的微调（强化学习的学习过程）
+LLaMA-Factory（推荐），https://github.com/hiyouga/LLaMA-Factor， 实现了使用ui 选择模型、数据集 进行微调的过程
+Unsloth（推荐）， https://docs.unsloth.ai/，实现了比较新的模型的有监督微调 + 强化学习微调，完整的案例居多
+
+5、deepseek 求解奥数题
+https://www.kaggle.com/code/nihilisticneuralnet/aimo-3-deepseek-r1-distill-qwen-7b-awq/notebook?scriptVersionId=280632218
+
+
+
+- 加载模型
+
+```
+import json
+import os
+from pathlib import Path
+from safetensors.torch import load_file
+from huggingface_hub import hf_hub_download, snapshot_download
+
+
+if USE_REASONING_MODEL or USE_INSTRUCT_MODEL:
+    repo_id = f"Qwen/Qwen3-{CHOOSE_MODEL}"
+else:
+    repo_id = f"Qwen/Qwen3-{CHOOSE_MODEL}-Base"
+
+local_dir = Path(repo_id).parts[-1]
+
+# 本地的模型权重
+weights_dict = load_file("/root/models/Qwen/Qwen3-0.6B/model.safetensors")
+
+load_weights_into_qwen(model, QWEN3_CONFIG, weights_dict)
+model.to(device)
+del weights_dict
+``
+
+- 加载tokenizer
+
+```
+if USE_REASONING_MODEL:
+    tokenizer_file_path = f"/root/models/Qwen/Qwen3-0.6B/tokenizer.json"
+else:
+    tokenizer_file_path = f"/root/models/Qwen/Qwen3-0.6B/tokenizer.json"
+
+# hf_hub_download(
+#     repo_id=repo_id,
+#     filename="tokenizer.json",
+#     local_dir=local_dir,
+# )
+
+if USE_REASONING_MODEL or USE_INSTRUCT_MODEL:
+    tokenizer = Qwen3Tokenizer(
+        tokenizer_file_path=tokenizer_file_path,
+        repo_id=repo_id,
+        apply_chat_template=True,
+        add_generation_prompt=True,
+        add_thinking=USE_REASONING_MODEL
+    )
+
+else:
+    tokenizer = Qwen3Tokenizer(
+        tokenizer_file_path=tokenizer_file_path,
+        repo_id=repo_id,
+        apply_chat_template=False,
+        add_generation_prompt=False,
+        add_thinking=False
+    )
+```
+
+
+# 提问
+1、 老师现在谷歌的模型前端这么强直接给接口，就能生成对应的页面，为啥还要用streamlit
+前端页面的生成工具 =》给需求，接口的传入参数 -》 生成页面
+
+streamlit 面向后端的便捷的前端页面开发工具，py写前端页面 + 前端页面逻辑，不是前端；
+streamlit 学习成本很低，更多的关注后端技能；
+
+
+2、 现在最强的是不是 qwen-2.5-max？
+https://lmarena.ai/leaderboard/
+qwen3-max
+
+
+3、 老师   论文里面的公式有必要去学习吗，很多论文的公式都看不懂
+论文是已经发表的工作 -》 读论文的目的，找到这篇论文主要的工作 / 创新点 ，公式的作用/计算过程 -》 面试
+
+deepssek-r1模型的训练过程？
+qwen3的创新点？
+qwen3的不同版本的差异？
+qwen3的结构？
+
+
+4、Google aistudio 程序的完成性很高是不是会淘汰很多前端开发
+展示没有，aistudio开发简单的单页面的程序；
+
+5、像千问3文本模型或者VL模型 、deepseek的文本或OCR模型，提示词是不是都可以用TOT、COT多模态思维连这样的提示词技术
+qwen， qwen-vl  模型都可以使用提示词、cot等技术
+
+6、怎么打印出思考过程？
+thinking 过程默认会打印
+
+7、老师用不用额外学强化学习？
+不用，对你的要求是理解 deepseek-r1 （前11页） 、qwen3 （前5、6页） 高频面试点
+
+8、老师我现在使用如cursor 写前端 大部分不是特别复杂多页面都是可以写出来
+ai 编程工具，适合单个页面的开发； 复杂页面不太行
+
+9、Qwen3的架构面试会问吗？
+会的；
+
+qwen3的训练过程 -》 没有开源 -》 阅读论文，理解关键的部分
+qwen3的推理代码 -》 需要掌握 -》 阅读代码，理解模型构建 + code 编写
+
+
+10、部署了千问2.5-instruct模型，然后使用agent调用的mcp tools的时候显示不支持，千问是从哪个模型支持mcp tools的调用，还是说 我使用的方式不对
+qwen2.5 也是支持tool，主要是输入和输出格式有差异；
+推荐 qwen3
+
+11、Qwen3 Next  Qwen3-XXXb-AxxB的模型的架构面试会问吗？
+会的，代码在 02_Qwen3-MoE.ipynb
+
+
+13、普通的大模型例如deepseek-v3 怎么打印思考过程
+下午演示 qwen3的部署
+
+
+14、推理模型在公司中具体会有哪些应用？
+外卖有用户的评价，有图 + 文本 -》 qwen-推理 -》 分类
+
+需要复杂思考和推理的任务，需要推理模型
+需要写长的、有逻辑的报告，需要推理
+
+15、大模型应用开发面试会让手撕代码吗 比如RMSnorm  moe  grpo算法？
+面试岗位工资比较高（一个月25k），则可能会
+
+面试岗位是常规的大模型应用，则可能会没有
+
+16、现在有的大模型都能做奥数的题目 也是转换成代码了吗？
+两种技术路线，qwen3 thinking推理，直接写代码进行计算。
+
+能推理的公式，偏向简单计算 + 逻辑推理
+
+积分，组合优化，复杂的计算，需要sympy / numpy 科学计算库。
+
+
+17、路线二 公式这么多 如果超级多公式岂不是token全被mcp的提示词给占满了
+推荐一个mcp server 最多有50个工具，和大模型的token输入上限存在关联。
+
+建议先进行一个tool的筛选。
+
+18、老师直接调用embedding 和 通过ollama等去调用embedding 有什么区别嘛
+没有区别
+
+19、我也想问 deepseek-ai/DeepSeek-Math-V2
+DeepSeek-Math 单独在数学题目上进行了额外的训练， 额外的推理技巧，转门特定的模型。
+
+20、OpenAI的GPT5模型进行think了吗？感觉回消息很快，看不到think内容
+
+
+21、找工作现在就要开始准备这些算法的原理代码手撕吗？
+是的
+
+
+22、老师，工作上一般不会微调，项目上，什么样的问题才需要微调？
+
+qwen3-32b 无法解决问题的时候，才考虑微调。
+    - 特定的问题，有特定的token，这些token是qwen无法识别的。
+    - 特定的问题，需要qwen进行确定的问题，减少继续。
+    - 写提示词 + rag，精度不够的时候，考虑微调。
+
+23、企业部署qwen3的话至少需要几B的  0.6B够用吗，知识问答及调用tools的场景
+7b - 12b 足够满足所有的要求，信息抽取 /  智能问答 足够。
+模型大小主要和gpu 显存，推理速度是相关的。
+
+24、下节课讲什么？
+文档解析和信息抽取，yolo、mineru、paddle-ocr、deepseek-ocr
+
+25、大模型面试用的书
+《百面大模型》，https://item.jd.com/10171648883982.html
+《大模型算法：强化学习、微调和对齐》，https://item.jd.com/10200632980305.html
+
+26、RAG检索
+- 全文检索
+- 语义检索
+
+
+
+
+# 作业（写为markdown提交）
+
+1、理解文档公式解析与智能问答中的思路1，阅读待选方案1、2、3
+
+实施步骤：
+  - 步骤1：pdf公式的解析，将文档中的公式进行结构解析，并生成对应的$\LaTeX$公式。
+  - 步骤2: RAG的检索和排序，用户的提问 与 公式 进行相似度计算，也可以加入rerank 过程，选择得到top1-8待选公式。
+  - 步骤3:
+    - 使用qwen-3 thinking模型，输入用户提问 + 公式latex ，生成对应的代码 或 sympy ，并执行代码，返回结果。
+    - 使用qwen-3 thinking模型，直接推理得到答案。
+
+2、解析10个pdf文档，并定义10个对应的mcp tool，可以通过numpy 计算，也可以通过sympy计算。
+
+3、结合rag tool筛选 加 mcp tool执行完成 整个问答。
+  - 步骤2: 定义mcp服务，并且将每一个公式整理为mcp 的一个可执行的tool 或 sympy的计算过程。
+  - 步骤3: 得到用户提问的时候，需要选择对应的tool
+    - 通过rag的步骤（用户的提问 与 公式 进行相似度计算，也可以加入rerank 过程，筛选top1/3公式） -》 tool 白名单
+  - 步骤4: 调用对应的tool，执行，得到结果，汇总得到回答。
+

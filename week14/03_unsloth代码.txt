@@ -1,0 +1,6 @@
+因为unsloth环境配置很繁琐，并且需要vllm和gpu，建议云端colab运行：
+
+https://docs.unsloth.ai/models/qwen3-how-to-run-and-fine-tune
+https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/Qwen3_(4B)-Thinking.ipynb
+https://colab.research.google.com/github/unslothai/notebooks/blob/main/nb/DeepSeek_R1_0528_Qwen3_(8B)_GRPO.ipynb
+
